@@ -29,7 +29,12 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            if (!repository.existsById(id)) throw new ResourceNotFoundException(id);
+            repository.deleteById(id);
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     public User update(Long id, User obj) {
